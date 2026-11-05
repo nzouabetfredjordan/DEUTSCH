@@ -246,6 +246,120 @@ button {
   line-height: 1.8;
 }
 
+.assessment-form,
+.assessment-panel,
+.assessment-result,
+.donation-box {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(17,17,17,0.08);
+  border-radius: 28px;
+  box-shadow: 0 18px 36px rgba(17,17,17,0.05);
+  padding: 24px 22px;
+  margin-bottom: 22px;
+}
+
+.assessment-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.assessment-head h3 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2vw, 2.1rem);
+  letter-spacing: -0.05em;
+  color: var(--black);
+}
+
+.assessment-head span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--red);
+  font-weight: 800;
+}
+
+.assessment-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.assessment-fields label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.assessment-fields input,
+.assessment-fields select {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(17,17,17,0.12);
+  background: rgba(255,255,255,0.8);
+  padding: 0.9rem 1rem;
+  color: var(--text);
+}
+
+.assessment-question {
+  margin: 0 0 18px;
+  color: var(--black);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+}
+
+.assessment-feedback {
+  margin-top: 18px;
+}
+
+.donation-box {
+  margin-top: 28px;
+}
+
+.donation-box h3 {
+  margin: 0 0 12px;
+  font-size: clamp(1.6rem, 2vw, 2.3rem);
+  color: var(--black);
+}
+
+.donation-box p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.donation-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.donation-list > div {
+  background: rgba(17,17,17,0.03);
+  border: 1px solid rgba(17,17,17,0.08);
+  border-radius: 18px;
+  padding: 18px 16px;
+}
+
+.donation-list span {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.donation-list strong {
+  color: var(--black);
+  font-size: 1.4rem;
+  letter-spacing: -0.04em;
+}
+
 .hero-showcase {
   position: relative;
   min-height: 500px;

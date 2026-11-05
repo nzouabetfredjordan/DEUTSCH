@@ -51,6 +51,25 @@ export default function AboutPage({ language = 'fr' }) {
         <div className="quote-box reveal">
           <p>{quote}</p>
         </div>
+
+        <div className="donation-box reveal">
+          <h3>{isGerman ? 'Unterstütze unsere Plattform' : 'Soutenez notre plateforme'}</h3>
+          <p>
+            {isGerman
+              ? 'Wenn du unsere Lernplattform unterstützt, hilft das uns, mehr hochwertige Übungen, bessere Inhalte und mehr Lernmöglichkeiten für alle bereitzustellen.'
+              : 'Si vous souhaitez soutenir notre plateforme, vous contribuez à créer plus de contenus, plus d’exercices et plus d’opportunités pour tous nos apprenants.'}
+          </p>
+          <div className="donation-list">
+            <div>
+              <span>{isGerman ? 'Orange Money' : 'Orange Money'}</span>
+              <strong>698419257</strong>
+            </div>
+            <div>
+              <span>{isGerman ? 'MTN Money' : 'MTN Money'}</span>
+              <strong>680409437</strong>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );

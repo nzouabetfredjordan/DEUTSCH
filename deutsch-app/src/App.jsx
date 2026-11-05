@@ -41,15 +41,26 @@ function App() {
     setIsAuthOpen(true);
   };
 
-  const handleAuthSuccess = (user) => {
+  const addTrackedUser = (user) => {
     const safeUser = {
-      firstName: user?.firstName || 'Apprenant',
-      lastName: user?.lastName || 'Connecté',
+      firstName: user?.firstName || user?.name || 'Apprenant',
+      lastName: user?.lastName || '',
       email: user?.email || 'apprenant@deutsch.app',
-      provider: user?.provider || 'email'
+      provider: user?.provider || 'manual',
+      level: user?.level || 'A1',
+      skill: user?.skill || 'Test gratuit',
+      progress: user?.progress ?? 0,
+      connected: user?.connected ?? true,
+      status: user?.status || 'actif'
     };
 
-    setCurrentUser(safeUser);
+    setCurrentUser({
+      firstName: safeUser.firstName,
+      lastName: safeUser.lastName,
+      email: safeUser.email,
+      provider: safeUser.provider
+    });
+
     setTrackedUsers((current) => {
       const key = `${safeUser.email.toLowerCase()}-${safeUser.provider}`;
       const exists = current.some((entry) => `${entry.email.toLowerCase()}-${entry.provider}` === key);
@@ -57,7 +68,14 @@ function App() {
       if (exists) {
         return current.map((entry) =>
           `${entry.email.toLowerCase()}-${entry.provider}` === key
-            ? { ...entry, connected: true, status: 'actif' }
+            ? {
+                ...entry,
+                connected: true,
+                status: 'actif',
+                level: safeUser.level,
+                skill: safeUser.skill,
+                progress: Math.max(entry.progress || 0, safeUser.progress || 0)
+              }
             : entry
         );
       }
@@ -69,15 +87,19 @@ function App() {
           name: safeUser.firstName,
           surname: safeUser.lastName,
           email: safeUser.email,
-          status: 'actif',
-          connected: true,
-          progress: 0,
-          level: 'A1',
-          skill: 'Nouveau',
+          status: safeUser.status,
+          connected: safeUser.connected,
+          progress: safeUser.progress,
+          level: safeUser.level,
+          skill: safeUser.skill,
           provider: safeUser.provider
         }
       ];
     });
+  };
+
+  const handleAuthSuccess = (user) => {
+    addTrackedUser(user);
     setIsAuthOpen(false);
   };
 
@@ -100,6 +122,7 @@ function App() {
           language={language}
           trackedUsers={trackedUsers}
           onOpenAuth={openAuth}
+          onTrackedUserAdd={addTrackedUser}
         />
       </main>
       <Footer language={language} />

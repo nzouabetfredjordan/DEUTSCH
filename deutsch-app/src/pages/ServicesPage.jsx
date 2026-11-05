@@ -72,7 +72,7 @@ const generateExercises = () => {
   return result;
 };
 
-export default function ServicesPage({ language = 'fr' }) {
+export default function ServicesPage({ language = 'fr', onTrackedUserAdd }) {
   const isGerman = language === 'de';
   const [selectedSkill, setSelectedSkill] = useState('reading');
   const [selectedLevel, setSelectedLevel] = useState('A1');
@@ -83,6 +83,16 @@ export default function ServicesPage({ language = 'fr' }) {
   const [showReview, setShowReview] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState(null);
   const [sessionResults, setSessionResults] = useState([]);
+  const [assessmentForm, setAssessmentForm] = useState({ name: '', email: '', level: 'A1' });
+  const [assessmentQuestions, setAssessmentQuestions] = useState([]);
+  const [assessmentIndex, setAssessmentIndex] = useState(0);
+  const [assessmentAnswer, setAssessmentAnswer] = useState('');
+  const [assessmentFeedback, setAssessmentFeedback] = useState(null);
+  const [assessmentScore, setAssessmentScore] = useState(0);
+  const [assessmentStarted, setAssessmentStarted] = useState(false);
+  const [assessmentCompleted, setAssessmentCompleted] = useState(false);
+  const [assessmentError, setAssessmentError] = useState('');
+  const [assessmentResults, setAssessmentResults] = useState([]);
 
   const exercises = useMemo(() => generateExercises(), []);
 
@@ -175,6 +185,98 @@ export default function ServicesPage({ language = 'fr' }) {
 
   const learners = initialLearners.slice(0, 4);
 
+  const startAssessment = () => {
+    if (!assessmentForm.name.trim() || !assessmentForm.email.trim()) {
+      setAssessmentError(isGerman ? 'Veuillez renseigner votre nom et votre e-mail.' : 'Veuillez renseigner votre nom et votre e-mail.');
+      return;
+    }
+
+    const pool = generateExercises().filter((exercise) => exercise.level === assessmentForm.level);
+    const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+
+    if (shuffled.length === 0) {
+      setAssessmentError(isGerman ? 'Aucune question disponible pour ce niveau.' : 'Aucune question disponible pour ce niveau.');
+      return;
+    }
+
+    onTrackedUserAdd?.({
+      firstName: assessmentForm.name.trim(),
+      lastName: '',
+      email: assessmentForm.email.trim(),
+      level: assessmentForm.level,
+      skill: 'Test gratuit',
+      progress: 0,
+      status: 'actif',
+      connected: true,
+      provider: 'manual'
+    });
+
+    setAssessmentQuestions(shuffled);
+    setAssessmentIndex(0);
+    setAssessmentAnswer('');
+    setAssessmentFeedback(null);
+    setAssessmentScore(0);
+    setAssessmentStarted(true);
+    setAssessmentCompleted(false);
+    setAssessmentError('');
+    setAssessmentResults([]);
+  };
+
+  const currentAssessmentQuestion = assessmentQuestions[assessmentIndex] || null;
+  const isAssessmentAnswerCorrect = (value) => normalize(value) === normalize(currentAssessmentQuestion?.answer || '');
+
+  const submitAssessmentAnswer = () => {
+    if (!currentAssessmentQuestion || assessmentFeedback) return;
+
+    const userAnswer = assessmentAnswer.trim();
+    const isCorrect = isAssessmentAnswerCorrect(userAnswer);
+    const result = {
+      id: `${currentAssessmentQuestion.id}-${Date.now()}`,
+      question: currentAssessmentQuestion.question || currentAssessmentQuestion.task || currentAssessmentQuestion.prompt,
+      userAnswer: userAnswer || 'Aucune réponse',
+      expectedAnswer: String(currentAssessmentQuestion.answer).trim(),
+      explanation: currentAssessmentQuestion.explanation || 'La bonne réponse est la plus précise selon le contexte.',
+      isCorrect
+    };
+
+    if (isCorrect) {
+      setAssessmentScore((prev) => prev + 1);
+    }
+
+    setAssessmentResults((prev) => [...prev, result]);
+    setAssessmentFeedback(result);
+  };
+
+  const nextAssessmentQuestion = () => {
+    if (!assessmentFeedback) return;
+
+    const isLast = assessmentIndex === assessmentQuestions.length - 1;
+
+    if (isLast) {
+      setAssessmentCompleted(true);
+      setAssessmentStarted(false);
+      setAssessmentAnswer('');
+      setAssessmentFeedback(null);
+      return;
+    }
+
+    setAssessmentIndex((prev) => prev + 1);
+    setAssessmentAnswer('');
+    setAssessmentFeedback(null);
+  };
+
+  const resetAssessment = () => {
+    setAssessmentQuestions([]);
+    setAssessmentIndex(0);
+    setAssessmentAnswer('');
+    setAssessmentFeedback(null);
+    setAssessmentScore(0);
+    setAssessmentStarted(false);
+    setAssessmentCompleted(false);
+    setAssessmentError('');
+    setAssessmentResults([]);
+  };
+
   return (
     <main className="page-shell exercise-page-shell">
       <div className="container exercise-shell">
@@ -188,7 +290,7 @@ export default function ServicesPage({ language = 'fr' }) {
                 : 'Des dizaines d’exercices structurés, des corrections instantanées et une progression visible à chaque séance.'}
             </p>
             <div className="cta-row">
-              <button type="button" className="primary-btn">{isGerman ? 'Test starten' : 'Lancer un test'}</button>
+              <button type="button" className="primary-btn" onClick={startAssessment}>{isGerman ? 'Test starten' : 'Lancer un test'}</button>
               <button type="button" className="secondary-btn">{isGerman ? 'Meine Fortschritte' : 'Voir mes progrès'}</button>
             </div>
           </div>
@@ -230,6 +332,144 @@ export default function ServicesPage({ language = 'fr' }) {
             <strong>2 {isGerman ? 'Sätze' : 'phrases'}</strong>
           </div>
         </div>
+
+        {!assessmentCompleted && !assessmentStarted && (
+          <div className="assessment-form reveal">
+            <div className="assessment-head">
+              <h3>{isGerman ? 'Kostenloses Niveau-Assessment' : 'Test de niveau gratuit'}</h3>
+              <span>{isGerman ? '5 Fragen • 1 minute' : '5 questions • 1 minute'}</span>
+            </div>
+            <div className="assessment-fields">
+              <label>
+                {isGerman ? 'Nom complet' : 'Nom complet'}
+                <input
+                  value={assessmentForm.name}
+                  onChange={(event) => setAssessmentForm((current) => ({ ...current, name: event.target.value }))}
+                  placeholder={isGerman ? 'Votre nom' : 'Votre nom'}
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  type="email"
+                  value={assessmentForm.email}
+                  onChange={(event) => setAssessmentForm((current) => ({ ...current, email: event.target.value }))}
+                  placeholder="name@example.com"
+                />
+              </label>
+              <label>
+                {isGerman ? 'Niveau' : 'Niveau'}
+                <select
+                  value={assessmentForm.level}
+                  onChange={(event) => setAssessmentForm((current) => ({ ...current, level: event.target.value }))}
+                >
+                  {levelOptions.map((level) => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            {assessmentError && <p className="error-message">{assessmentError}</p>}
+            <button type="button" className="primary-btn" onClick={startAssessment}>
+              {isGerman ? 'Test starten' : 'Lancer le test'}
+            </button>
+          </div>
+        )}
+
+        {assessmentStarted && currentAssessmentQuestion && !assessmentCompleted && (
+          <div className="assessment-panel reveal">
+            <div className="assessment-head">
+              <h3>{isGerman ? 'Test de niveau' : 'Test de niveau'}</h3>
+              <span>
+                {assessmentIndex + 1}/{assessmentQuestions.length}
+              </span>
+            </div>
+            <p className="assessment-question">{currentAssessmentQuestion.question}</p>
+            {currentAssessmentQuestion.type === 'qcm' && (
+              <div className="option-list">
+                {currentAssessmentQuestion.options.map((option) => (
+                  <button key={option} type="button" className="option-btn" onClick={() => {
+                    const isCorrect = normalize(option) === normalize(currentAssessmentQuestion.answer);
+                    const result = {
+                      id: `${currentAssessmentQuestion.id}-${Date.now()}`,
+                      userAnswer: option,
+                      expectedAnswer: currentAssessmentQuestion.answer,
+                      explanation: currentAssessmentQuestion.explanation || '',
+                      isCorrect
+                    };
+
+                    setAssessmentAnswer(option);
+                    setAssessmentResults((prev) => [...prev, result]);
+                    setAssessmentFeedback(result);
+
+                    if (isCorrect) {
+                      setAssessmentScore((prev) => prev + 1);
+                    }
+                  }}>
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+            {(currentAssessmentQuestion.type === 'reponse' || currentAssessmentQuestion.type === 'texte') && (
+              <div className="answer-block">
+                <textarea value={assessmentAnswer} onChange={(event) => setAssessmentAnswer(event.target.value)} rows="4" placeholder={isGerman ? 'Réponse...' : 'Réponse...'} />
+                <button type="button" className="primary-btn" onClick={submitAssessmentAnswer}>
+                  {isGerman ? 'Antwort prüfen' : 'Vérifier'}
+                </button>
+              </div>
+            )}
+            {assessmentFeedback && (
+              <div className="exercise-feedback assessment-feedback">
+                <div className={`feedback-badge ${assessmentFeedback.isCorrect ? 'success' : 'warning'}`}>
+                  {assessmentFeedback.isCorrect ? (isGerman ? 'Bonne réponse' : 'Bonne réponse') : (isGerman ? 'À revoir' : 'À revoir')}
+                </div>
+                <div className="feedback-copy">
+                  <p><strong>{isGerman ? 'Votre réponse' : 'Votre réponse'} :</strong> {assessmentFeedback.userAnswer}</p>
+                  <p><strong>{isGerman ? 'Bonne réponse' : 'Bonne réponse'} :</strong> {assessmentFeedback.expectedAnswer}</p>
+                  <p><strong>{isGerman ? 'Explication' : 'Explication'} :</strong> {assessmentFeedback.explanation}</p>
+                </div>
+                <button type="button" className="primary-btn" onClick={nextAssessmentQuestion}>
+                  {assessmentIndex === assessmentQuestions.length - 1 ? (isGerman ? 'Voir le score' : 'Voir le score') : (isGerman ? 'Question suivante' : 'Question suivante')}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {assessmentCompleted && (
+          <div className="assessment-result reveal">
+            <h3>{isGerman ? 'Résultat du test' : 'Résultat du test'}</h3>
+            <div className="final-summary">
+              <div>
+                <span>{isGerman ? 'Score final' : 'Score final'}</span>
+                <strong>{assessmentScore}/5</strong>
+              </div>
+              <div>
+                <span>{isGerman ? 'Taux de réussite' : 'Taux de réussite'}</span>
+                <strong>{Math.round((assessmentScore / 5) * 100)}%</strong>
+              </div>
+            </div>
+            <div className="review-list">
+              {assessmentResults.map((result, index) => (
+                <div key={`${result.id}-review`} className="review-item">
+                  <div className="review-item-head">
+                    <span>Question {index + 1}</span>
+                    <span className={result.isCorrect ? 'review-pill success' : 'review-pill warning'}>
+                      {result.isCorrect ? 'Réussi' : 'À revoir'}
+                    </span>
+                  </div>
+                  <p><strong>{isGerman ? 'Question' : 'Question'} :</strong> {assessmentQuestions[index]?.question || assessmentQuestions[index]?.task || assessmentQuestions[index]?.prompt}</p>
+                  <p><strong>{isGerman ? 'Bonne réponse' : 'Bonne réponse'} :</strong> {result.expectedAnswer}</p>
+                  <p><strong>{isGerman ? 'Votre réponse' : 'Votre réponse'} :</strong> {result.userAnswer}</p>
+                </div>
+              ))}
+            </div>
+            <button type="button" className="primary-btn" onClick={resetAssessment}>
+              {isGerman ? 'Recommencer' : 'Recommencer'}
+            </button>
+          </div>
+        )}
 
         <div className="exercise-workspace">
           <div className="exercise-main-panel reveal">
@@ -431,38 +671,6 @@ export default function ServicesPage({ language = 'fr' }) {
             )}
           </div>
 
-          <aside className="exercise-side-panel reveal">
-            <div className="learners-panel-header">
-              <span className="eyebrow dark">Apprenants</span>
-              <h3>Utilisateurs actifs</h3>
-            </div>
-
-            <div className="learners-list">
-              {learners.map((learner) => (
-                <div key={learner.id} className="learner-card">
-                  <div className="learner-meta-wrap">
-                    <div className="learner-avatar">{learner.name.charAt(0)}</div>
-                    <div>
-                      <strong>{learner.name} {learner.surname}</strong>
-                      <span>{learner.skill}</span>
-                    </div>
-                  </div>
-                  <div className="learner-row">
-                    <span>{learner.level}</span>
-                    <span className={learner.connected ? 'online-pill' : 'offline-pill'}>
-                      {learner.connected ? 'En ligne' : 'Hors ligne'}
-                    </span>
-                  </div>
-                  <div className="learner-progress">
-                    <div className="progress-bar">
-                      <span style={{ width: `${learner.progress}%` }} />
-                    </div>
-                    <small>{learner.progress}%</small>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </aside>
         </div>
       </div>
     </main>
