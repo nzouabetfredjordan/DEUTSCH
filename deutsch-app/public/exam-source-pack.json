@@ -1,0 +1,90 @@
+{
+  "updatedAt": "2026-11-17",
+  "scope": "Deutsch-AllApp",
+  "levels": ["A1", "A2", "B1", "B2", "C1"],
+  "skills": ["Reading", "Listening", "Writing", "Speaking"],
+  "officialSources": [
+    {
+      "exam": "Goethe",
+      "priority": "high",
+      "levels": ["A1", "A2", "B1", "B2", "C1"],
+      "skills": ["Reading", "Listening", "Writing", "Speaking"],
+      "url": "https://www.goethe.de/ins/fr/fr/spr/prf.html",
+      "role": "Reference structurelle",
+      "description": "Exercices gratuits et entraînements officiels du Goethe Institut pour Lesen, Hören, Schreiben et Sprechen."
+    },
+    {
+      "exam": "TELC",
+      "priority": "high",
+      "levels": ["A1", "A2", "B1", "B2", "C1"],
+      "skills": ["Reading", "Listening", "Writing", "Speaking"],
+      "url": "https://www.telc.net/en/exams.html",
+      "role": "Formats officiels et calibration des tâches",
+      "description": "Formats, durées, types de tâches et critères d'évaluation selon le niveau examiné."
+    },
+    {
+      "exam": "ÖSD",
+      "priority": "high",
+      "levels": ["A1", "A2", "B1", "B2", "C1"],
+      "skills": ["Reading", "Listening", "Writing", "Speaking"],
+      "url": "https://www.oesterreichisches-sprachdiplom.at/en/downloads/",
+      "role": "Modellsätze et règlement",
+      "description": "Downloads officiels, modèles d'examens et règlements pour les niveaux clés."
+    },
+    {
+      "exam": "ECL",
+      "priority": "medium",
+      "levels": ["A2", "B1", "B2", "C1"],
+      "skills": ["Reading", "Listening", "Writing", "Speaking"],
+      "url": "https://www.ecl-exam.org/",
+      "role": "Modules indépendants",
+      "description": "Depuis août 2026, l'ECL fonctionne par modules indépendants avec un minimum de 60% dans chaque module."
+    }
+  ],
+  "communitySources": [
+    {
+      "name": "Deutsch Mit Mir",
+      "platform": "Telegram",
+      "exam": "Goethe / TELC / ÖSD",
+      "url": "https://t.me/deutschmitmir",
+      "use": "Thèmes récurrents, erreurs fréquentes, préparation pour l'oral et les formats demandés."
+    },
+    {
+      "name": "Prüfung Goethe / ÖSD / telc A1-C1",
+      "platform": "Telegram",
+      "exam": "Goethe / TELC / ÖSD",
+      "url": "https://t.me/pruefungdeutsch",
+      "use": "Suivi des difficultés réelles et des types de tâches demandés."
+    },
+    {
+      "name": "Deutsch Prüfungsvorbereitung",
+      "platform": "Telegram",
+      "exam": "TELC / Goethe / DTB",
+      "url": "https://t.me/deutsch_pruefungsvorbereitung",
+      "use": "Vocabulaire, thèmes de difficulté, compréhension de la logique d'examen."
+    },
+    {
+      "name": "Allemand Sans Fautes",
+      "platform": "WhatsApp",
+      "exam": "General",
+      "url": "https://chat.whatsapp.com/",
+      "use": "Observar les erreurs concrètes et les besoins de préparation des apprenants."
+    }
+  ],
+  "examMatrix": [
+    { "exam": "Goethe", "level": "A1", "skill": "Reading", "taskType": "Leseverstehen", "difficulty": 1 },
+    { "exam": "Goethe", "level": "A2", "skill": "Listening", "taskType": "Hörverstehen", "difficulty": 2 },
+    { "exam": "Goethe", "level": "B1", "skill": "Writing", "taskType": "Schreiben", "difficulty": 3 },
+    { "exam": "Goethe", "level": "B2", "skill": "Speaking", "taskType": "Sprechen", "difficulty": 4 },
+    { "exam": "TELC", "level": "A1", "skill": "Reading", "taskType": "Teil 1", "difficulty": 1 },
+    { "exam": "TELC", "level": "B1", "skill": "Listening", "taskType": "Teil 2", "difficulty": 3 },
+    { "exam": "TELC", "level": "B2", "skill": "Writing", "taskType": "Schreiben", "difficulty": 4 },
+    { "exam": "TELC", "level": "C1", "skill": "Speaking", "taskType": "Mündliche Prüfung", "difficulty": 5 },
+    { "exam": "ÖSD", "level": "A2", "skill": "Reading", "taskType": "Modellsatz", "difficulty": 2 },
+    { "exam": "ÖSD", "level": "B1", "skill": "Writing", "taskType": "Schreiben", "difficulty": 3 },
+    { "exam": "ÖSD", "level": "B2", "skill": "Listening", "taskType": "Hörverstehen", "difficulty": 4 },
+    { "exam": "ECL", "level": "B1", "skill": "Reading", "taskType": "Module Reading", "difficulty": 3 },
+    { "exam": "ECL", "level": "B2", "skill": "Writing", "taskType": "Module Writing", "difficulty": 4 },
+    { "exam": "ECL", "level": "C1", "skill": "Speaking", "taskType": "Module Speaking", "difficulty": 5 }
+  ]
+}

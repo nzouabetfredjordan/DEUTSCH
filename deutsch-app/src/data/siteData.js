@@ -54,6 +54,7 @@ export const skillOptions = [
 ];
 
 export const levelOptions = ['A1', 'A2', 'B1', 'B2', 'C1'];
+export const examOptions = ['All', 'Goethe', 'TELC', 'ÖSD', 'ECL'];
 
 const exerciseTemplates = {
   reading: [
@@ -113,4 +114,96 @@ export const initialLearners = [
   { id: 3, name: 'Sonia', surname: 'Tchou', email: 'sonia@deutsch.app', status: 'désactivé', connected: false, progress: 44, level: 'A1', skill: 'Compréhension écrite' },
   { id: 4, name: 'Daniel', surname: 'Kouassi', email: 'daniel@deutsch.app', status: 'actif', connected: true, progress: 91, level: 'C1', skill: 'Expression orale' },
   { id: 5, name: 'Mireille', surname: 'Nono', email: 'mireille@deutsch.app', status: 'actif', connected: false, progress: 57, level: 'B2', skill: 'Compréhension écrite' }
+];
+
+export const examSourceLibrary = {
+  official: [
+    {
+      exam: 'Goethe',
+      priority: 'Haute',
+      levels: ['A1', 'A2', 'B1', 'B2', 'C1'],
+      skills: ['Reading', 'Listening', 'Writing', 'Speaking'],
+      url: 'https://www.goethe.de/ins/fr/fr/spr/prf.html',
+      description: 'Entraînements officiels et fiches de préparation des examens Goethe de A1 à C1.',
+      role: 'Référence structurelle'
+    },
+    {
+      exam: 'TELC',
+      priority: 'Haute',
+      levels: ['A1', 'A2', 'B1', 'B2', 'C1'],
+      skills: ['Reading', 'Listening', 'Writing', 'Speaking'],
+      url: 'https://www.telc.net/en/exams.html',
+      description: 'Formats, durées, types de tâches et exercices de préparation officiels par niveau.',
+      role: 'Calibrage des formats d’examen'
+    },
+    {
+      exam: 'ÖSD',
+      priority: 'Haute',
+      levels: ['A1', 'A2', 'B1', 'B2', 'C1'],
+      skills: ['Reading', 'Listening', 'Writing', 'Speaking'],
+      url: 'https://www.oesterreichisches-sprachdiplom.at/en/downloads/',
+      description: 'Modellsätze, téléchargements officiels et règles d’examen pour les niveaux clés.',
+      role: 'Exemples modèles officiels'
+    },
+    {
+      exam: 'ECL',
+      priority: 'Moyenne',
+      levels: ['A2', 'B1', 'B2', 'C1'],
+      skills: ['Reading', 'Listening', 'Writing', 'Speaking'],
+      url: 'https://www.ecl-exam.org/',
+      description: 'Le format ECL repose sur quatre modules indépendants avec seuil de 60% par module.',
+      role: 'Module-by-module calibration'
+    }
+  ],
+  community: [
+    {
+      name: 'Deutsch Mit Mir',
+      platform: 'Telegram',
+      exam: 'Goethe / TELC / ÖSD',
+      url: 'https://t.me/deutschmitmir',
+      description: 'Groupes utiles pour observer les thèmes récurrents et les difficultés des apprenants.',
+      priority: 'Moyenne'
+    },
+    {
+      name: 'Prüfung Goethe / ÖSD / telc A1-C1',
+      platform: 'Telegram',
+      exam: 'Goethe / TELC / ÖSD',
+      url: 'https://t.me/pruefungdeutsch',
+      description: 'Observations de besoins réels, erreurs fréquentes et types de tâches demandés.',
+      priority: 'Moyenne'
+    },
+    {
+      name: 'Deutsch Prüfungsvorbereitung',
+      platform: 'Telegram',
+      exam: 'TELC / Goethe / DTB',
+      url: 'https://t.me/deutsch_pruefungsvorbereitung',
+      description: 'Très utile pour repérer les thèmes de vocabulaire et les niveaux de difficulté.',
+      priority: 'Moyenne'
+    },
+    {
+      name: 'Allemand Sans Fautes',
+      platform: 'WhatsApp',
+      exam: 'Général',
+      url: 'https://chat.whatsapp.com/',
+      description: 'Canal de discussion pour comprendre les erreurs concrètes et les contenus recherchés.',
+      priority: 'Faible'
+    }
+  ]
+};
+
+export const examMatrix = [
+  { exam: 'Goethe', level: 'A1', skill: 'Reading', taskType: 'Leseverstehen', difficulty: 1 },
+  { exam: 'Goethe', level: 'A2', skill: 'Listening', taskType: 'Hörverstehen', difficulty: 2 },
+  { exam: 'Goethe', level: 'B1', skill: 'Writing', taskType: 'Schreiben', difficulty: 3 },
+  { exam: 'Goethe', level: 'B2', skill: 'Speaking', taskType: 'Sprechen', difficulty: 4 },
+  { exam: 'TELC', level: 'A1', skill: 'Reading', taskType: 'Teil 1', difficulty: 1 },
+  { exam: 'TELC', level: 'B1', skill: 'Listening', taskType: 'Teil 2', difficulty: 3 },
+  { exam: 'TELC', level: 'B2', skill: 'Writing', taskType: 'Schreiben', difficulty: 4 },
+  { exam: 'TELC', level: 'C1', skill: 'Speaking', taskType: 'Mündliche Prüfung', difficulty: 5 },
+  { exam: 'ÖSD', level: 'A2', skill: 'Reading', taskType: 'Modellsatz', difficulty: 2 },
+  { exam: 'ÖSD', level: 'B1', skill: 'Writing', taskType: 'Schreiben', difficulty: 3 },
+  { exam: 'ÖSD', level: 'B2', skill: 'Listening', taskType: 'Hörverstehen', difficulty: 4 },
+  { exam: 'ECL', level: 'B1', skill: 'Reading', taskType: 'Module Reading', difficulty: 3 },
+  { exam: 'ECL', level: 'B2', skill: 'Writing', taskType: 'Module Writing', difficulty: 4 },
+  { exam: 'ECL', level: 'C1', skill: 'Speaking', taskType: 'Module Speaking', difficulty: 5 }
 ];
